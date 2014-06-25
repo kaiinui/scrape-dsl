@@ -2,40 +2,55 @@ require_relative 'spec_helper'
 
 describe FieldBuilder do
   context '#build' do
-    context 'string with xpath' do
-      let(:field) do
-          FieldBuilder.build do
+    context 'build a field' do
+      context 'string with xpath' do
+        let(:field) do
+          FieldBuilder.build {
             string :title, xpath: "someXPath"
-          end
+          }.first
+        end
+
+        it {expect(field.name).to eq :title}
+        it {expect(field.type).to eq :string}
+        it {expect(field.xpath).to eq "someXPath"}
       end
 
-      it {expect(field.name).to eq :title}
-      it {expect(field.type).to eq :string}
-      it {expect(field.xpath).to eq "someXPath"}
+      context 'integer with xpath' do
+        let(:field) do
+          FieldBuilder.build {
+            integer :count, xpath: "someXPath"
+          }.first
+        end
+
+        it {expect(field.name).to eq :count}
+        it {expect(field.type).to eq :integer}
+        it {expect(field.xpath).to eq "someXPath"}
+      end
+
+      context 'set with xpath' do
+        let(:field) do
+          FieldBuilder.build {
+            set :articles, xpath: "someXPath"
+          }.first
+        end
+
+        it {expect(field.name).to eq :articles}
+        it {expect(field.type).to eq :set}
+        it {expect(field.xpath).to eq "someXPath"}
+      end
     end
 
-    context 'integer with xpath' do
-      let(:field) do
-        FieldBuilder.build do
-          integer :count, xpath: "someXPath"
-        end
+    context 'build many fields' do
+      let(:fields) do
+        FieldBuilder.build {
+          string :title, xpath: "some"
+          integer :count, xpath: "some"
+          set :articles, xpath: "some"
+        }
       end
 
-      it {expect(field.name).to eq :count}
-      it {expect(field.type).to eq :integer}
-      it {expect(field.xpath).to eq "someXPath"}
-    end
-
-    context 'set with xpath' do
-      let(:field) do
-        FieldBuilder.build do
-          set :articles, xpath: "someXPath"
-        end
-      end
-
-      it {expect(field.name).to eq :articles}
-      it {expect(field.type).to eq :set}
-      it {expect(field.xpath).to eq "someXPath"}
+      it {expect(fields.count).to eq 3}
+      it {expect(fields.select {|f|f.is_a? Field}.count).to eq 3}
     end
   end
 end

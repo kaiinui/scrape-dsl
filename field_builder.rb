@@ -1,32 +1,37 @@
 require_relative 'field'
 
 class FieldBuilder
-  attr_accessor :field
+  attr_accessor :fields
 
   class << self
     def build(&blk)
       instance = new
-      instance.field = Field.new
       instance.instance_eval &blk
-      instance.field
+      instance.fields
     end
   end
 
-  def typed(type, name, options = {})
+  def initialize
+    self.fields = []
+  end
+
+  def field(type, name, options = {})
+    field = Field.new
     field.type = type
     field.name = name
     field.xpath = options[:xpath]
+    fields.push field
   end
 
   def string(name, options = {})
-    typed(:string, name, options)
+    field(:string, name, options)
   end
 
   def integer(name, options = {})
-    typed(:integer, name, options)
+    field(:integer, name, options)
   end
 
   def set(name, options = {})
-    typed(:set, name, options)
+    field(:set, name, options)
   end
 end
