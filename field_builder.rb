@@ -12,9 +12,17 @@ class FieldBuilder
     end
   end
 
-  def string(name, options = {})
-    field.type = :string
+  def typed(type, name, options = {})
+    field.type = type
     field.name = name
     field.xpath = options[:xpath]
+  end
+
+  def string(name, options = {})
+    typed(:string, name, options)
+  end
+
+  def integer(name, options = {})
+    typed(:integer, name, options)
   end
 end
