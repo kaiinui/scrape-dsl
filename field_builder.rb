@@ -25,4 +25,8 @@ class FieldBuilder
   def integer(name, options = {})
     typed(:integer, name, options)
   end
+
+  def set(name, options = {})
+    typed(:set, name, options)
+  end
 end
